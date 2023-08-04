@@ -9,15 +9,20 @@ import {
 import Home from './pages/Home/Home/Home.jsx';
 import Login from './pages/Login/Login/Login.jsx';
 import AuthProvider from './Provider/AuthProvider.jsx';
+import Register from './pages/Register/Register/Register.jsx';
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "home",
     element: <Home></Home>,
   },
   {
     path: "login",
     element: <Login></Login>
+  },
+  {
+    path: "register",
+    element:<Register></Register>
   }
 ]);
 
