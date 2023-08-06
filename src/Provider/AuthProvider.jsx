@@ -1,6 +1,6 @@
 
 import React, { createContext, useEffect, useState } from 'react';
-import {GoogleAuthProvider, createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile} from "firebase/auth"
+import {FacebookAuthProvider, GoogleAuthProvider, OAuthProvider, createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile} from "firebase/auth"
 import { app } from '../component/firebase/firebase.config';
 // import { app } from '../firebase/firebase.config';
 
@@ -11,6 +11,9 @@ const AuthProvider = ({children}) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const googleProvider = new GoogleAuthProvider();
+    const appleProvider = new OAuthProvider();
+    const facebookProvider = new FacebookAuthProvider();
+
 
     //for register----------------------------
     const createUser = (email, password) => {
@@ -29,6 +32,14 @@ const AuthProvider = ({children}) => {
         setLoading(true)
         return signInWithPopup(auth, googleProvider);
     }
+    const appleSignIn = () => {
+        setLoading(true)
+        return signInWithPopup(auth, appleProvider)
+    }
+    const facebookSignIn = () => {
+        setLoading(true)
+        return signInWithPopup(auth, facebookProvider)
+    }
 
     //logout related work----------------
     const logOut = () => {
@@ -36,11 +47,7 @@ const AuthProvider = ({children}) => {
         return signOut(auth)
     }
 
-    // const userProfile = (name, photo) => {
-    //    return updateProfile(auth.currentUser, {
-    //         displayName: name, photoURL: photo
-    //     });
-    // }
+    
 
 
     useEffect(() => {
@@ -59,7 +66,9 @@ const AuthProvider = ({children}) => {
         createUser,
         signin,
         logOut,
-        googleSignIn
+        googleSignIn,
+        appleSignIn,
+        facebookSignIn
     }
     return (
         <AuthContext.Provider value ={authInfo}>

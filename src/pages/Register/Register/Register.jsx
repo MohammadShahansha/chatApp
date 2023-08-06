@@ -1,15 +1,18 @@
 import React, { useContext } from 'react';
 import img from '../../../assets/images/MOkx logo 1.png'
 import { FaArrowLeft } from 'react-icons/fa';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import { AuthContext } from '../../../Provider/AuthProvider';
 import Swal from 'sweetalert2';
 
 const Register = () => {
 
-    const { register, handleSubmit, reset, formState: { errors } } = useForm();
-    const { createUser, userProfile } = useContext(AuthContext)
+    const { register, handleSubmit, watch, reset, formState: { errors } } = useForm();
+    const { createUser } = useContext(AuthContext)
+    const location = useLocation();
+    const from = location.state?.from?.pathname || "/message";
+   
 
     const navigate = useNavigate();
 
@@ -21,6 +24,7 @@ const Register = () => {
                 console.log(userCreated);
                 reset();
                 Swal.fire('Registration Successfull');
+                navigate(from, { replace: true })
             })
             .catch(error => console.log(error))
     };
@@ -28,8 +32,8 @@ const Register = () => {
 
     return (
         <div>
-            <div className='mt-10 mb-20 px-5 md:mt-20 md:ms-32'>
-                <Link to="/login"><h2 className='font-[700]'><FaArrowLeft></FaArrowLeft></h2></Link>
+            <div className='mt-10 mb-10 md:mb-20 px-5 md:mt-20 md:ms-32'>
+                <Link to="/"><h2 className='font-[700]'><FaArrowLeft></FaArrowLeft></h2></Link>
             </div>
             <img className='mx-auto' src={img} alt="" />
             <h2 className='text-center text-[#69235B] text-[18px] md:text-[40px] font-[700]'>Sign up with Email</h2>
@@ -41,7 +45,7 @@ const Register = () => {
             {/* -------------------registration info---------------- */}
             <div className="">
 
-                <div className="md:w-[440px] mx-auto mt-10">
+                <div className="md:w-[440px] mx-auto mt-5 md:mt-10">
 
                     <div className="w-full ">
                         <form onSubmit={handleSubmit(onSubmit)} className="card-body">
@@ -75,7 +79,14 @@ const Register = () => {
                                 <label className="label">
                                     <span className="text-[#69235B] font-[500] text-[14px] md:text-[20px]">Confirm Password</span>
                                 </label>
-                                <input type="password" {...register("confirmPassword", { required: true, minLength: 6, pattern: /(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]/ })} name='password' placeholder="" className="border-b-2 w-full" />
+                                <input
+                                    type="password"
+                                    name="confirmPassword"
+                                    ref={register({
+                                        required: true,
+                                        validate: (value) => value === watch('password')
+                                    })}
+                                /> {errors.confirmPassword && <p>Passwords do not match</p>}
                             </div> */}
 
                             <div className="form-control mt-10">
